@@ -1,0 +1,74 @@
+
+<div id ="app">
+    <div>
+        <h1>{{text}}</h1>
+        <h1>changeText 함수 호출 값: {{ changeText() }}</h1>
+        <h1>changeText 함수 호출 값: {{ changeText() }}</h1>
+        <h1>changeText 함수 호출 값: {{ changeText() }}</h1>
+
+        <h2>{{ computedText }}</h2>
+
+       <h2> - Watch 기능 -</h2>
+        <button @click="changeMessage"> {{ message }} </button> {{ watchMessage}}
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+
+const vuePage = new Vue ({
+        el : "#app",
+        data() {
+            return {
+                text : 'Computed 테스트 텍스트 문구',
+                message : "안녕하세요!! Vue.js Wathch 기능 테스트 오리지널 문구 !!",
+                watchMessage : '',
+
+            }
+        },
+        methods: {
+            changeText(){
+                console.log('함수 호출')
+                console.log(this.text)
+                return this.text.split('').reverse().join('')
+            },
+            changeMessage(){
+                console.log('changeMessage 호출')
+                this.message = "변경된 message 입니다."
+            }
+            
+        },
+        // methods 부분에 선언된 함수와 동일한 로직일때
+        // 캐싱 기능이 없는 methods는 호출될 때마낟 console 값이 출력
+        // computed는 캐싱기능이 있기 때문에 methods와 차이점을 확인
+        computed : {
+            computedText() { // 함수형태이지만 데이터 임
+                console.log("Computed 기능을 생성함.")
+                return this.text.split('').reverse().join('')
+            }
+            
+        },
+        watch:{
+            // message 데이터를 참조
+            // message : function
+            // 데이터뿐만 아니라 computed 로 계산된 형태의 데이터도 watch도 감지할 수 있음
+            // 보통 게시판에서 한 컬럼을 선택했을때 고유한 id 값이 바뀜을 감지하고
+            // 이떄 그 id 값에 따른 상세 데이터를 호출 할때 주로 사용
+            message() {
+                //window.alert('message 변수에 담긴 데이터가 변경됨')
+                this.watchMessage = "watch 출력"
+                
+
+            },
+            id(){
+                // 해당 상세데이터를 조회하는 api 호출
+            }
+        }
+
+    });
+
+</script>
+<style lang="">
+    
+</style>

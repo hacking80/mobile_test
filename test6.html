@@ -1,0 +1,93 @@
+<style>
+.next > .slide-enter-active {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.next > .slide-enter {
+    transform: translate3d(100%, 0, 0);
+}
+.next > .slide-leave-active {
+    position: absolute;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.next > .slide-leave-to {
+    position: absolute;
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0;
+}
+
+.prev > .slide-enter-active {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.prev > .slide-enter {
+    transform: translate3d(-100%, 0, 0);
+}
+.prev > .slide-leave-active {
+    position: absolute;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+.prev > .slide-leave-to {
+    position: absolute;
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+}
+
+</style>
+
+<div id="app">
+
+
+    <section class="body">
+        <div class="btn-area">
+        <a class="btn" :class="{ 'no-cursor': key === 0 }" @click="goPrev()"></a>
+        </div>
+    
+        <transition-group tag="div" name="slide" class="info-slide">
+            <div class="info-area">
+            <p class="title">{{ infoList[key].title }}</p>
+            </div>
+        </div>
+        </transition-group>
+    
+        <div class="btn-area next">
+        <a 
+            class="btn next-btn" 
+            :class="{ 'no-cursor': key === this.infoList.length - 1 }" 
+            @click="goNext()"
+        ></a>
+        </div>
+    </section>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script>
+
+
+    const app = new Vue ({
+        el: '#app',
+        data: function () {
+            return {
+                key : 0,
+                infoList : [
+                    { title: "111", key:0 },
+                    { title: "222",key:1 },
+                ] 
+                    
+            }
+        },
+        methods: {
+            goPrev() {
+                if (this.key !== 0) {
+                    document.querySelector(".info-slide").classList.remove("next");
+                    document.querySelector(".info-slide").classList.add("prev");
+                    this.key -= 1;
+                }
+            },
+            goNext() {
+                if (this.key !== this.infoList.length - 1) {
+                    document.querySelector(".info-slide").classList.remove("prev");
+                    document.querySelector(".info-slide").classList.add("next");
+                    this.key += 1;
+                }
+            },
+        },
+    })
+  </script>

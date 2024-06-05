@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<link rel="stylesheet" href="test2.css" />
+<link rel="stylesheet" media="(max-width : 6000px)" href="test2_mobile.css" />
+<style>
+    .categorySelect { position:absolute; top:130px; left:90px }
+    .brandSelect { position:absolute; top:130px; left:250px }
+    .t02 {color: red}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/axios"></script>
+
+</head>
+<body>
+
+<div id="app">
+
+
+        <!-- header 영역 -->
+        <div class="header">
+            <h1>홀릭파트너스</h1>
+        </div>
+        
+        <div class="hmMenu" @click="visible = !visible" >
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        
+        <div class="categorySelect">
+            <select v-model="category"  @change="searchCategory($event)"   name="categorys">
+                <option disabled="disabled" selected value="0">전체</option>
+                <option v-for="(item, index) in categoryList" :value="item.categoryId" :key="item.categoryId"  >{{ item.categoryName }}</option>
+            </select>
+        </div>
+        
+        <div class="brandSelect">
+            <select v-model="brand"  @change="searchBrand($event)"   name="brands">
+                <option disabled="disabled" selected value="0">전체</option>
+                <option v-for="(item, index) in brandList" :value="item.brandId" :key="item.brandId"  >{{ item.brandName }}</option>
+            </select>
+        </div>
+
+        <!-- navigator 영역 -->
+
+        <nav class="nav-menu"  v-if="visible ? 'flex' : '' ">
+            <a href="#" >메뉴1</a>
+            <a href="#" >메뉴2</a>
+            <a href="#" >메뉴3</a>
+            <a href="#" >메뉴1</a>
+            <a href="#" >메뉴2</a>
+            <a href="#" >메뉴3</a>    
+            <a href="#" >메뉴1</a>
+            <a href="#" >메뉴2</a>
+            <a href="#" >메뉴3</a>    
+        </nav>        
+
+        <!-- main content 영역 -->
+        <div class="row">
+            <div class="left">
+                <div class="card">
+                    <h2>main Contents   </h2>
+                    <div> {{ visible ? '111': '222' }} </div>
+                    <input type="text" v-model="data">
+                    <h5>내용</h5>
+                    <div  class="fakeimg" style="height:200px;">Image</div>
+                    <h5>TEST</h5>
+                    <p>내용 1</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상단 -->
+        <div v-for="(item, ridx) in recommendCampaignList" :key="ridx"   v-if="item.campaignType === 'B' || item.campaignType === 'P' || (item.campaignType === 'H' && item.referralCode) || (item.campaignType === 'D' && item.referralCode)"  >
+            <div class="card mb-3" style="max-width: 65%;">
+                <div class="row g-0">
+                    <div class="col-md-4"> <img :src="item.image" class="img-fluid rounded-start" alt="..."></div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <h5 class="card-title">( {{item.recommendTypeName}} ) {{item.partnersProductName ? item.partnersProductName : item.saleName }}
+                                - {{ item.campaignType === 'H' ? '특별상품' : item.campaignType === 'D' ? '독점상품' : '일반상품' }} </h5>
+                            <p class="card-text  t02">{{item.eventFeatures ? item.eventFeatures : campaignCommonDetail.subTitle }}</p>
+                            <p class="card-text">판매종료일 : </p>
+                            <p class="card-text">상품번호 {{ item.saleProductNo }}</p>
+                            <p class="td-label">BEST {{displayNumber(ridx)}}</p>
+                            <p class="card-text"></p>
+                            <p class="card-text"><small class="text-body-secondary">최대 40%</small></p>
+                            <p class="card-text"><small class="text-body-secondary">최대 40%</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상품 리스트 -->
+        
+        <div v-for="(item, cidx) in campaignList" >
+            <div class="card mb-3" style="max-width: 65%;" >
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img :src="item.image" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ displayNumber(cidx) }}</h5>
+                            <h5 class="card-title" v-if="shouldDisplayLabel(form.sortBy, cidx)">TOP {{ displayNumber(cidx) }}</h5>
+                            <h5 class="card-title" v-if="displayNumber(cidx) < 11 && form.sortBy === 'B'" >TOP {{ displayNumber(cidx) }}</h5>
+
+                            <p class="card-text">{{ item.partnersProductName ? item.partnersProductName : item.saleName }}  </p>
+                            <p class="card-text">{{ item.campaignType === 'H' ? '특별상품' : item.campaignType === 'D' ? '독점상품' : '일반상품' }}</p>
+
+                            <p class="card-text" v-if="!isLinkRegularMember"></p>
+                                <span>최대</span>{{ item.campaignMaxRewardRate }}
+                            <p class="card-text" v-if="item.campaignAddRewardRate"> {{ item.campaignAddRewardRate }}%  추가 이벤트중</p>
+                            <p class="card-text" v-else></p>
+                                <span>{{item.totalRewardRate}}</span>
+                            <p class="card-text red" v-if="item.campaignAddRewardRate"> {{ item.campaignAddRewardRate }}% (추가이벤트중) </p>
+                            <p class="card-text" href="#" @click="showCommissionPopup($event, item)" >자세히 보기</p>
+                    
+                            <p v-if="item.endDate">{{ this.formatAsMonthDay(item.endDate) }}</p>
+                            <p v-else>재고소진시 <br/> 마감</p>
+
+                            <p v-if="this.formatAsMonthDay(item.campaignEndDate)">{{ this.formatAsMonthDay(item.campaignEndDate) }} <br/> 마감</p>
+                            <p v-else> - </p>
+
+                            <p v-if="this.isLogin">
+                                <a @click.prevent="modifyCampaignLiked(item)">
+                                    <img v-if="item.isLiked === 0" src="/images/common/icon_heard_empty.png" alt="좋아요">
+                                    <img v-else src="/images/common/icon_heard.png" alt="좋아요" ></img>
+                                </a>
+                            </p>
+
+                            <p v-if="campaignList.length === 0"> 검색 결과가 없습니다.</p>
+
+                            <p class="card-text">판매종료일 : </p>
+                            <p class="card-text">상품번호 {{ item.saleProductNo }}</p>
+                            <p class="td-label">BEST {{displayNumber(cidx)}}</p>
+                            <p class="card-text"></p>
+                            <p class="card-text"><small class="text-body-secondary">최대 40%</small></p>
+                            <p class="card-text"><small class="text-body-secondary">최대 40%</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    
+  
+    <!-- footer 영역 -->
+    <!--
+    <div class="footer">
+        <h3>link: http://keen.devpools.kr</h3>
+    </div>
+    -->
+    
+  
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  
+<script>
+
+    
+
+//        $('html,body').animate({scrollTop: document.body.scrollHeight},"fast");
+
+
+        //import CryptoJS from 'https://cdn.jsdelivr.net/npm/vue-cryptojs@2.4.6/dist/vue-cryptojs.min.js'
+        
+        function formatAsMonthDay(dateStr) {
+          // dateStr이 null이거나 빈 문자열인 경우 공백을 반환
+          if (dateStr === null || dateStr.trim() === "") {
+            return "";
+          }
+        
+          const currentDate = new Date();
+          const currentYear = currentDate.getFullYear();
+          const inputDate = new Date(dateStr);
+          const inputYear = inputDate.getFullYear();
+        
+          if(inputYear >= 2030) {
+            return "";
+          }
+        
+          const month = inputDate.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더함
+          const day = inputDate.getDate();
+        
+          // 현재 연도와 입력된 날짜의 연도가 같은 경우
+          if (currentYear === inputYear) {
+            return `${month}월 ${day}일`;
+          } else {
+            // 현재 연도와 입력된 날짜의 연도가 다른 경우
+            return `${inputYear}년 ${month}월 ${day}일`;
+          }
+        }
+        
+        function currency(value) {
+            console.log('## currency ###')
+            if (value != undefined) {
+                let num = new Number(value);
+                return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,");
+            }
+        }
+        
+        function openLoading (isShow) {
+            // 0. html 요소 생성
+            const div = document.createElement('div');
+            const span1 = document.createElement('span');
+            const span2 = document.createElement('span');
+            const span3 = document.createElement('span');
+            let showType = isShow ? '' : 'dn';
+            let loadingWrap = document.getElementsByClassName('loading-wrap')[0];
+            // 1. div className 지정
+            div.className = `loading-wrap`;
+            // 2. div 내부에 span 3개 추가
+            div.append(span1, span2, span3);
+            // 3. span 추가된 div body 하단에 추가 / false시 요소 제거
+            if (isShow) document.body.append(div);
+            else if (!isShow && loadingWrap) loadingWrap.remove();
+        }
+        
+        function isLogin(){
+            return (JSON.parse(localStorage.getItem("bh-login-user"))) ? true : false;
+        }
+        
+        function isRegular(){
+            let result = false;
+            const user = JSON.parse(localStorage.getItem("bh-login-user"));
+            if(isLogin() && user && user.gradeSeparatorId && user.isAdmin === 0){
+                result = (user.gradeSeparatorId > 1) ? true : false;
+            }
+            return result;
+        }
+        
+        function encryptedCipherText(msg) {
+        
+        var iv = 'e9d3712c4d5c35093d340733b8c26b92';
+        var salt = 'deafa8b6802cebcc0bcceaaa5f3461a9';
+        var passPhrase = 'e534cf179007db7e6360ebf95fa5d51c';
+        var keySize = 128;
+        var iterationCount = 1000;
+        var key128Bits = CryptoJS.PBKDF2(passPhrase, CryptoJS.enc.Hex.parse(salt), {
+            hasher: CryptoJS.algo.SHA512,
+            keySize: keySize / 32,
+            iterations: iterationCount
+        });
+        
+        var encrypted = CryptoJS.AES.encrypt(
+            msg,
+            key128Bits,
+            {iv: CryptoJS.enc.Hex.parse(iv)});
+        
+        return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+        }
+        
+        function getSignature(msg, timestamp) {
+            const key_url = new URL(window.location.origin);
+            console.log('key', key_url.host);
+        
+            const msg_url = new URL(msg);
+            console.log('msg', msg_url.host + msg_url.pathname);
+        
+            return CryptoJS.enc.Base64.stringify(
+                CryptoJS.HmacSHA256(msg_url.host + msg_url.pathname + timestamp, key_url.host))
+        }
+        
+        
+        function getRestApi(options) {
+            let headerData = {};
+        
+            if (options.headers === null || options.headers === undefined) {
+                headerData = {
+                    'Content-Type': 'application/json; charset=utf-8',
+                }
+            } else {
+                headerData = options.headers;
+            }
+        
+            const ts = new Date().getTime();
+            headerData['VND-API-KEY-TYPE-1'] = ts;
+            // const token = localStorage.getItem("bh-access-token");
+            // if (token) {
+            //     headerData['VND-API-KEY-TYPE-2'] = token;
+            // }
+            headerData['VND-API-KEY-TYPE-3'] = getSignature(options.url, ts);
+        
+            if (options.version !== undefined) {
+                headerData['VND-API-VERSION'] = options.version;
+            } else {
+                headerData['VND-API-VERSION'] = "v1";
+            }
+        
+            let returnData =
+                axios({
+                        method: 'get',
+                        url: options.url,
+                        withCredentials:true,
+                        headers: headerData
+                    })
+                    .then(function (data) {
+                        openLoading(false);
+                        if (typeof (options.success) === "function") {
+                            if(data.data.code === "0000" || data.data.code === "M001" || data.data.code === "0204"){
+                                options.success(data);
+                            } else {
+                                console.log(data.data.body.message);
+                            }
+                        }
+                        delete options;
+                    })
+                    .catch(function (err) {
+                        openLoading(false);
+                        console.log('err', err);
+                    });
+        
+            return returnData;
+        }
+        
+        function isObject(obj) {
+            return obj.constructor.toString().indexOf("Object") > -1;
+        }
+        
+        function getQueryParamsFromObject (form) {
+            return "?".concat(
+                Object.keys(form)
+                    .filter(key => form[key] || form[key] === 0)
+                    .map(o => {
+                        let result;
+                        if (Array.isArray(form[o])) {
+                            result = form[o].map(el => o.concat("=").concat(el)).join("&");
+                        } else if(isObject(form[o])){
+                            const obj = form[o];
+                            const processedObj = removeEmpty(obj);
+                            const arrKeys = Object.keys(processedObj);
+                            result = arrKeys.map(el => el.concat("=").concat(processedObj[el])).join("&");
+                        } else {
+                            result = o.concat("=").concat(form[o]);
+                        }
+                        return result;
+                    })
+                    .join('&')
+            );
+        }    
+            
+            const vuePage = new Vue ({
+                el : "#app",
+                data() {
+        
+                    return {
+                        scrollPostion : 0,
+                        data : "11111",
+                        data2 : "22222",
+                        visible : false,
+                        categoryList : [],
+                        brandList : [],
+                        category : 0,
+                        brand : 0,
+                        select1 : "0",
+                        isConsignmentRegularMember: 0, // 위탁회원
+                        isLinkRegularMember: 0, // 링크회원
+                        form: {
+                        campaignType: "A",
+                        gradeRewardRate: 0,
+                        categoryId: 0,
+                        brandId: 0,
+                        searchKeyword: null,
+                        partnerId: null,
+                        userId: null,
+                        page: 0,
+                        size: 10,
+                        sortBy: "A"
+                        },
+                        brandName: "전체",
+                        categoryName: "전체",
+                        brandList: [],
+                        categoryList: [],
+                        campaignList: [],
+                        recommendCampaignList: [],
+                        campaignCommonDetail: {},
+                        //////// 페이징
+                        pageInfo: {
+                        pageSize: 10,
+                        pageNumber: 0,
+                        totalElements: 0,
+                        totalPages: 0,
+                        pageList: [],
+                        },
+                        searchTableForm: {},
+                        isCommissionPopupVisible: false,
+                        commissionPopup: {
+                        popupStyle: {
+                            position: 'absolute',
+                            left: '700px',
+                            top: '0px',
+                        },
+                        totalRewardRate: 0,
+                        campaignRewardRate: 0,
+                        gradeRewardRate: 0,
+                        campaignAddRewardRate: 0
+                        },
+        
+                        isSigninPopupOpen: false,
+                        isCodeRequestPopupOpen: false,
+                        signinForm: {
+                        userId: null,
+                        userPassword: null,
+                        isAutoLogin : 0,
+                        isAdmin: 0,
+                        subMenu: null,
+                        },
+                        isLoginFailedAlertPopupOpen: false,
+                        loginFailedAlertForm: {
+                        titleText: null,
+                        contentText: "아이디와 비밀번호를 확인해주세요.",
+                        },
+                        visible : false,
+                        domain  : "http://localhost:8190/m"
+                    }
+                    
+                },
+        
+        
+                props : ['value', 'items' ],
+                methods : {
+                    scrollEvents(){
+                      const headerState = this.headerStaet;
+                      this.headerScrollEvent(headerState)  ;
+                      
+                    },
+                    runOnScroll(){
+                        //console.log('scroll')
+                    },
+                    headerScrollEvent(headerState){
+
+                        // 현재 스크롤 탑
+                        const beforeScrollTop = this.currentScrollValue;
+                        // 스크롤 후의 탑
+                        const afterScrollValue = document.documentElement.scrollTop;
+
+                        //console.log("현재 스크롤 탑 : " + beforeScrollTop)
+                        //console.log("스크롤 후의 탑 : " + afterScrollValue)
+                        
+
+                    },
+                    runOnWheel(e){
+                        //console.log(e)
+
+                        // 현재 스크롤 탑
+                        const beforeScrollTop = this.currentScrollValue;
+                        // 스크롤 후의 탑
+                        const afterScrollValue = document.documentElement.scrollTop;
+
+                        //console.log("현재 스크롤 탑 : " + beforeScrollTop)
+                        //console.log("스크롤 후의 탑 : " + afterScrollValue)
+                        
+                        wheelAction = e.deltaY;
+
+                        if(wheelAction < 0){
+                              scrollY = afterScrollValue +  Math.abs(wheelAction)
+                        } else {
+                             scrollY = afterScrollValue -  Math.abs(wheelAction)
+                        }
+
+                        //window.scrollBy(0, e.deltaY);
+                        //window.scrollTo({top:0, left:0, behavior:"auto"})
+
+                        /*
+                        window.scroll({
+                            top : scrollY,
+                            left : 0,
+                            behavior : 'smooth'
+                        });
+                        e.preventDefault();
+                        */
+                        
+
+                    },                 
+                    handleScroll(e){
+                        this.scrollPostion = e.target.scrollTop;
+                        
+                        const afterScrollValue = document.documentElement.scrollTop;
+                        //console.log(afterScrollValue)
+
+                        if(this.scrollPostion > 100){
+                            console.log("UP")
+                        }else {
+                            console.log("DOWN")
+                        }
+                       
+                    },
+        
+                    shouldDisplayLabel(sortBy, cidx) {
+                        return this.displayNumber(cidx) < 11 && ['A', 'C', 'F', 'G'].includes(sortBy);
+                    },
+        
+                    getCategoryList() {
+                        let api_url = 'http://127.0.0.1:5500/test_category.json';
+                            axios.get(api_url).then((response) => {
+                                console.log(response)
+                                this.categoryList = response.data;
+                        });
+                    },
+                    getbrandList() {
+                        let api_url = 'http://127.0.0.1:5500/test_brand.json';
+                            axios.get(api_url).then((response) => {
+                                console.log(response)
+                                this.brandList = response.data;
+                        });
+                    },
+        
+        
+                    searchCategory(e){
+                        console.log(e)
+                        console.log(e.target.name)
+                        let selectedIdx = e.target.selectedIndex;
+                        console.log("name : ",   e.target[selectedIdx].text)
+                        console.log("value : " , e.target.value)
+        
+                        let brand = e.target.value;
+                        let brandName = e.target[selectedIdx].text;
+        
+                        this.form.brandId = brandId;
+                        this.brandName = brandName;
+                        this.getCampaignSearch();                
+        
+                    },
+        
+                    searchBrand(e) {
+                        console.log(e)
+                        console.log(e.target.name)
+                        let selectedIdx = e.target.selectedIndex;
+                        console.log("name : ",   e.target[selectedIdx].text)
+                        console.log("value : " , e.target.value)
+        
+                        this.form.brandId = brandId;
+                        this.brandName = brandName;
+                        this.getCampaignSearch();                
+                    },
+        
+                    getCampaignSearch() {
+                        console.log('### getCampaignSearch ###')
+                        this.form.page = 0;
+        
+                        this.getRecommendCampaignList();
+                        this.getCampaignList();
+                    },
+        
+                    getRecommendCampaignList() {
+                        this.recommendCampaignList.splice(0);
+                        const that = this;
+                        const baseURI = this.domain + "/api/v1/partners/campaign/recommend/list" + getQueryParamsFromObject(this.form);
+                        getRestApi({
+                      url: baseURI,
+                      success(result) {
+                        console.log("----- getRecommendCampaignList success! ------");
+                        console.log(result);
+                        that.recommendCampaignList = result.data.body;
+        
+        
+                        that.recommendCampaignList.map(el => {
+                          if (el.recommendType == "P") {
+                            el.recommendTypeName = "인기";
+                          } else if (el.recommendType == "R") {
+                            el.recommendTypeName = "추천";
+                          }
+                          return el;
+                        });
+                      },
+                      error(err) {
+                        console.log("err : " + err);
+                      }
+                    });
+                    },
+        
+                    getCampaignList(type = null) {
+                        this.campaignList.splice(0);
+                        const that = this;
+                        let url = "/api/v1/partners/campaign/universal/list";
+                        if (isLogin() && isRegular()) {
+                        url = "/api/v1/partners/campaign/regular/list";
+                        }
+                        const baseURI = this.domain + url + getQueryParamsFromObject(this.form);
+        
+                        console.log('----------- getCampaignList ---------------')
+        
+                        getRestApi({
+                        url: baseURI,
+                        success(result) {
+                            //console.log("getCampaignList success!");
+                            //console.table(result);
+                            console.log(result.data.body.content);
+        
+                            that.campaignList = result.data.body.content;
+        
+                            that.campaignList.map(el => {
+                            if (el.campaignType === "H") {
+                                el.campaignTypeName = "특별";
+                            } else if (el.recommendType === "D") {
+                                el.campaignTypeName = "독점";
+                            } else {
+                                el.campaignTypeName = "일반";
+                            }
+                            return el;
+                            });
+        
+                            that.form.page = result.data.body.number;
+                            that.pageInfo.pageSize = result.data.body.size;
+                            that.pageInfo.pageNumber = result.data.body.number;
+                            that.pageInfo.totalElements = result.data.body.totalElements;
+                            that.pageInfo.totalPages = result.data.body.totalPages;
+        
+                            if (type && result.data.body.totalPages === 0) {
+                            that.notExistPages();
+                            }
+        
+                            // 임시주석
+                            //pageGroupInit(that.form, that.pageInfo, that.$refs);
+        
+                            that.getCampaignCommon();
+                        },
+                        error(err) {
+                            console.log("err : " + err);
+                        }
+                        });
+                    },
+        
+                    notExistPages() {
+                        this.form.page = 0;
+                        this.getCampaignSearch();
+                    },            
+        
+                    getCampaignCommon() {
+                        const that = this;
+                        const baseURI = this.domain + "/api/v1/partners/campaign-common/detail";
+                        getRestApi({
+                        url: baseURI,
+                        success(result) {
+                            //console.log("getCampaignCommon success!");
+                            //console.log(result);
+                            that.campaignCommonDetail = result.data.body;
+                        },
+                        error(err) {
+                            console.log("err : " + err);
+                        }
+                    });
+                  },
+        
+                    
+                },  // methods()
+        
+        
+        
+        
+                computed  : {
+                    displayNumber() {
+                    return (index) => {
+                      return (this.pageInfo.pageNumber * this.pageInfo.pageSize) + index + 1;
+                    }
+                  }
+        
+                },
+                created() { 
+                    window.scrollTo(0,100);
+                    
+                    this.getCategoryList()
+                    this.getbrandList()
+                    this.getCampaignSearch();
+        
+                    //window.addEventListener('scroll', this.handleScroll);
+        
+                },
+                mounted() { 
+                    
+                    //if(this.visible) this.data='222'
+                    //window.addEventListener('scroll', this.runOnScroll)
+                    window.addEventListener('wheel', function(e){
+                        //console.log(e)
+                        //sidebarScrollTop = this.offset();
+                        //console.log(sidebarScrollTop)
+                        //console.log(e)
+                        //console.log(e.pageY)
+                        //e.pageY = e.pageY - 100;
+
+                        let mouseWheel =  e.deltaY < 0 ? 'up'  : 'down';
+                        let scrollTop  = e.target.scrollTop;
+                        let innerHeight = $(window).innerHeight();
+
+                        console.log(mouseWheel, e.deltaY, "  ", e.pageY,  "   ", scrollTop, "  ", innerHeight)
+                        //console.log( $(window).scrollTop())
+
+                        let topPosition = innerHeight - Math.abs(e.deltaY)
+
+                        console.log(this.scrollPostion, innerHeight)
+
+                        var scrollHeight = $('#app').prop('scrollHeight')
+
+                        console.log('scrollHeight : ', scrollHeight);
+
+                        if(this.scrollPostion === undefined ){
+
+                            console.log("1")
+                            this.scrollPostion = topPosition;
+
+                        }else {
+                            console.log("2")
+                            this.scrollPostion = scrollHeight - ( scrollHeight - Math.abs(e.deltaY));
+                            console.log(this.scrollPostion)
+                        }
+                        
+
+                        //window.scrollBy(0, e.pageY)
+                        //THIS.scrollPos = window.scrollY; 
+
+                        //console.log(document.querySelector("#app").offsetTop)
+                        //document.body.scrollIntoView(false)
+                        window.scrollBy({top:this.scrollPostion, left:0, behavior:"auto"})
+
+                       
+
+                    })
+                    //window.addEventListener('wheel', this.runOnWheel)
+
+                    
+                    //document.addEventListener('scroll', this.scrollEvents);
+
+                },
+                unmounted() {
+                    document.removeEventListener('scroll', this.scrollEvents);
+                },
+                
+        
+                
+            });
+            
+        
+        </script>
+
+
+
+</body>
+</html>
+

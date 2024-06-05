@@ -1,0 +1,56 @@
+
+<div class="test-content">
+    <p class="test-title">Vertical Scroll</p>
+    <div class="vertical-scroll">
+      <!-- 제어할 요소에 ref를 적용해준다. -->
+      <ul ref="verticalScrollWrap">
+        <template v-for="i in 12">
+          <li :style="{ backgroundColor: `hsl(${parseInt(Math.random() * 24, 10) * 15}, 16%, 57%)` }"></li>
+        </template>
+      </ul>
+    </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+  <script>
+
+// 제어할 스크롤 요소
+const verticalScrollWrap = this.$refs.verticalScrollWrap
+
+verticalScrollWrap.addEventListener('mousedown', (e) => {
+    this.isMouseDown = true
+    this.startX = e.pageX - verticalScrollWrap.offsetLeft
+    this.scrollLeft = verticalScrollWrap.scrollLeft
+})
+
+verticalScrollWrap.addEventListener('mouseleave', () => {
+    this.isMouseDown = false
+})
+
+verticalScrollWrap.addEventListener('mouseup', () => {
+    this.isMouseDown = false
+})
+
+verticalScrollWrap.addEventListener('mousemove', (e) => {
+    if (!this.isMouseDown) return
+
+    e.preventDefault()
+    const x = e.pageX - verticalScrollWrap.offsetLeft
+    const beforeScrollLeft = (x - this.startX) * 1
+    verticalScrollWrap.scrollLeft = this.scrollLeft - beforeScrollLeft
+})
+
+const app = new Vue ({
+        el: '.test-content',
+        data: function() {
+            return {
+                isMoustDown : false,
+                startx : 0,
+                scrollLeft : 0,
+
+            }
+        }
+    })
+
+  </script>

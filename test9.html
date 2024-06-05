@@ -1,0 +1,104 @@
+
+<style>
+.boardMenu{
+    display: flex;
+    width: 1390px;
+    overflow: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    cursor: grabbing;
+}
+.boardMenu::-webkit-scrollbar{
+    display: none; /* Chrome, Safari, Opera*/
+}    
+
+.wrap {max-width:500px; margin:50px auto; background:#f8f8f8;}
+
+/* 가로 스크롤 적용 */
+.scroll__wrap {overflow-x:hidden; overflow-y:auto; white-space:nowrap; font-size:0}
+.scroll--element {display:inline-block; width:150px; height:150px; border:2px solid #222; background:#fff; font-size:16px; line-height:150px; text-align:center;}
+.scroll--element + .scroll--element {margin-left:15px;}
+
+</style>
+
+
+<!--     <div class="boardMenu"
+        ref="scrollable" 
+        @mousedown="onMouseDown" 
+        @mousemove="onMouseMove" 
+        @mouseup="onMouseUp" >
+
+        <div v-for="board in getBoardCtgry" :key="board.boardSeq">
+            <div><a href="#">[{{board.boardName}}]</a> </div>
+        </div>
+    </div> -->
+
+    <div class="wrap">
+        <div class="scroll__wrap">
+          <div class="scroll--element">Element1</div>
+          <div class="scroll--element">Element2</div>
+          <div class="scroll--element">Element3</div>
+          <div class="scroll--element">Element4</div>
+          <div class="scroll--element">Element5</div>
+          <div class="scroll--element">Element6</div>
+        </div>
+      </div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+
+
+const app = new Vue ({
+        el: '.boardMenu',
+        data: function() {
+            return {
+                //isMoustDown : false,
+                //startx : 0,
+                //scrollLeft : 0,
+                isDragging : true,
+                getBoardCtgry : [
+                    {booardSeq : 1, boardName : "111111111111111111111111"},
+                    {booardSeq : 2, boardName : "22222222"},
+                    {booardSeq : 3, boardName : "3333ㅁㅁㅁㅁ"},
+                    {booardSeq : 4, boardName : "4444ㅇㅇㅇㅇ"},
+                    {booardSeq : 4, boardName : "4444ㅇㅇㅇㅇ"},
+                    {booardSeq : 4, boardName : "4444ㅇㅇㅇㅇ"},
+                    {booardSeq : 4, boardName : "4444ㅇㅇㅇㅇ"},
+                    {booardSeq : 4, boardName : "4444ㅇㅇㅇㅇ"},
+                    {booardSeq : 4, boardName : "4444ㅇㅇㅇㅇ"},
+                ]
+
+
+            }
+        },
+        methods : { 
+            onMouseDown(event) {
+                console.log('onMouseDown')
+                this.isDragging = true;
+                this.startX = event.pageX - this.$refs.scrollable.offsetLeft;
+                this.scrollLeft = this.$refs.scrollable.scrollLeft;
+            },
+            onMouseMove(event) {
+                console.log('onMouseMove')
+                if (!this.isDragging) return;
+                event.preventDefault();
+                const x = event.pageX - this.$refs.scrollable.offsetLeft;
+                const distance = (x - this.startX) * 2;
+                this.$refs.scrollable.scrollLeft = this.scrollLeft - distance;
+            },
+            onMouseUp() {
+
+                this.isDragging = false;
+            }   
+
+          },
+        mounted() {
+            //this.$refs.scrollable
+        }
+         
+        
+    })
+
+</script>

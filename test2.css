@@ -1,0 +1,121 @@
+* { box-sizing: border-box;  }
+  
+  body {
+    padding: 10px;
+    font-family: Gulim;
+    background: #eee;
+  }
+  
+  .header {
+    padding: 10px;
+    text-align: center;
+    background: white;
+  }
+  
+  .header h1 {
+    font-size: 40px;
+  }
+  
+  .nav {
+    overflow: hidden;
+    background-color: #b70202;
+  }
+  
+  .nav a {
+    float: left;
+    color: #ffffff;
+    text-align: center;
+    padding: 12px 12px;
+    text-decoration: none;
+  }
+  
+  .left {   
+    float: left;
+    width: 75%;
+  }
+  
+  .right {
+    float: left;
+    width: 25%;
+    background-color: #eee;
+    padding-left: 20px;
+  }
+  
+  .fakeimg {
+    background-color: #aaa;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .card {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  .footer {
+    padding: 10px;
+    text-align: center;
+    background: white;
+    margin-top: 20px;
+  }
+
+
+  .hmMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width:45px;
+}
+
+.hmMenu:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.bar {
+    border-style: dashed; border: 2px;
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+}
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-menu-show {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-menu a {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.nav-menu a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

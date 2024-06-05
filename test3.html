@@ -1,0 +1,95 @@
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- <script src="https://unpkg.com/http-vue-loader"></script> -->
+
+<style>
+ .select01 li a.on {
+  color:#f40006;
+  font-weight:700;
+  padding: 4px 11px;
+  margin: 0 2px;
+  border:solid 1px #F03535;
+  border-radius:15px;
+  }	
+</style>
+
+<div id="app">
+	<h1>테스트</h1>
+	{{ message }}
+	<div class="select01">
+		<ul v-for="(v, key, cIdx) in campaignTypeList">
+			<li><a href="#" @click="setCampaignType(`${key}`)" :class="{on :  form.campaignType === `${key}` }" >{{ v }}  - {{ key }}</a></li>
+		</ul>
+	</div>
+
+</div>
+
+
+<script>
+const app = new Vue({
+	el: "#app",
+	data() {
+		return {
+			message : 'Holic Partners',
+			show : false,
+			campaignTypeList : { A : "전체", B : "일반", H:"특별", D:"독점"},
+            form: {
+              campaignType: "A",
+              gradeRewardRate: 0,
+              categoryId: 0,
+              brandId: 0,
+              searchKeyword: null,
+              partnerId: null,
+              userId: null,
+              page: 0,
+              size: 10,
+              sortBy: "A"
+            },			
+			
+		}
+	},
+	methods : {
+		handleClick(e){
+			console.log('handleClick')
+			console.log(e.target.value)
+		},
+		setCampaignType(type) {
+            this.form.campaignType = type;
+          },		
+	},
+	beforeCreate() { 
+		// 데이터가 생기기 이전에 동작함. Vue 인스턴스 된 순간 동작 (data, methods, watch를 사용할 수 없음)
+		console.log('beforeCreate -------')
+		console.log(this.message)
+	},
+	created() {
+		// 데이터에 진입은 가능하지만 , DOM 이 아직 Render 되지 않은 상황 (Data, methods, watch, computed 사용 가능)
+		console.log('create ------')
+		console.log(this.message)
+	},
+	beforeMount() {
+		// 템플릿이 렌더링 함수로 컴파일 된 직후
+		// Dom 접근 불가능
+		console.log('beforeMounted..........')
+	},
+	mounted() {
+		// 돔 트리를 볼수 있음.
+		console.log(this.$el)
+		this.$nextTick(()=>{
+			console.log('nextTick.............')
+		})
+	},
+	beforeUpdate() {
+		// 데이터의 변화가 일어나지만 렌더링이 다시 일어나기 전에 추가 작업이 가능
+		// 이 작업을 하더라도 재 렌더링을 호출하지 않음
+		console.log('beforeUpdate......')
+	},
+	updated() {
+		// 데이터가 DOM에 적용된 이후
+		// 이 단계에서 data 를 조작하면 무한 렌더링이 될 수 있음.
+		console.log('updated.............')
+	}
+//	components: { 'Login' : httpVueLoader('Login.vue'),  }
+})
+
+
+</script>
