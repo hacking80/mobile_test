@@ -1,0 +1,83 @@
+
+ [
+ {
+    "categoryId": 1,
+    "categoryName": "생활용품",
+    "sort": 1
+  },
+  {
+    "categoryId": 2,
+    "categoryName": "주방용품",
+    "sort": 2
+  },
+  {
+    "categoryId": 3,
+    "categoryName": "청소/욕실",
+    "sort": 3
+  },
+  {
+    "categoryId": 4,
+    "categoryName": "메이크업",
+    "sort": 4
+  },
+  {
+    "categoryId": 12,
+    "categoryName": "기초",
+    "sort": 5
+  },
+  {
+    "categoryId": 13,
+    "categoryName": "헤어",
+    "sort": 6
+  },
+  {
+    "categoryId": 14,
+    "categoryName": "바디",
+    "sort": 7
+  },
+  {
+    "categoryId": 15,
+    "categoryName": "속옷",
+    "sort": 8
+  },
+  {
+    "categoryId": 5,
+    "categoryName": "패션/잡화",
+    "sort": 9
+  },
+  {
+    "categoryId": 6,
+    "categoryName": "차량용품",
+    "sort": 10
+  },
+  {
+    "categoryId": 7,
+    "categoryName": "운동/홈트",
+    "sort": 11
+  },
+  {
+    "categoryId": 8,
+    "categoryName": "여행/캠핑",
+    "sort": 12
+  },
+  {
+    "categoryId": 17,
+    "categoryName": "전자기기",
+    "sort": 13
+  },
+  {
+    "categoryId": 9,
+    "categoryName": "유아용품",
+    "sort": 14
+  },
+  {
+    "categoryId": 10,
+    "categoryName": "반려동물",
+    "sort": 15
+  },
+  {
+    "categoryId": 16,
+    "categoryName": "남성",
+    "sort": 16
+  }
+ ]
