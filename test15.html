@@ -1,0 +1,146 @@
+
+<div id ="app">
+    <template>
+        <section v-for="(post, index) in posts" :key="index">
+            <a @click="post.open = !post.open" v-text = "post.topMenu"></a>
+                <ul v-show="post.open">
+                    <li v-for="item in post.subMenu">
+                        <a :href="item.subMentPath" >{{ item.subMenuName }}</a>
+                    </li>
+                </ul>
+        </section>
+    </template>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+
+const vuePage = new Vue ({
+        el : "#app",
+        data() {
+            return {
+                text : 'Computed 테스트 텍스트 문구',
+                message : "안녕하세요!! Vue.js Wathch 기능 테스트 오리지널 문구 !!",
+                watchMessage : '',
+                active:null,
+                posts :  [
+                    {
+                    topMenu :"상품",
+                    topMenuId : 1,
+                    open : false,
+                    subMenu : [
+                                { subMenuId : 1, subMenuName : "상품버전", subMenuPath : "/" },
+                                { subMenuId : 2, subMenuName : "찜한상품", subMenuPath : "/" },
+                                { subMenuId : 3, subMenuName : "코드버전", subMenuPath : "/" },
+                                { subMenuId : 4, subMenuName : "인기카테고리", subMenuPath : "/" },
+                                { subMenuId : 5, subMenuName : "전략캐페인", subMenuPath : "/" },  
+                            ]
+                    },
+                    {
+                    topMenu :"리포트",
+                    topMenuId : 2,
+                    open : false,
+                    subMenu : [
+                                { subMenuId : 1, subMenuName : "상품별", subMenuPath : "/" },
+                                { subMenuId : 2, subMenuName : "주문별", subMenuPath : "/" },
+                                { subMenuId : 3, subMenuName : "내상품순위", subMenuPath : "/" },
+                                { subMenuId : 4, subMenuName : "정산", subMenuPath : "/" },
+                            ]
+                    },                    
+                    {
+                    topMenu :"커뮤니티",
+                    topMenuId : 3,
+                    open : false,
+                    subMenu : [
+                                { subMenuId : 1, subMenuName : "캠페인전략", subMenuPath : "/" },
+                                { subMenuId : 2, subMenuName : "성공전략", subMenuPath : "/" },
+                                { subMenuId : 3, subMenuName : "자유게시판", subMenuPath : "/" },
+                                { subMenuId : 4, subMenuName : "묻고닫하기", subMenuPath : "/" },
+                                { subMenuId : 5, subMenuName : "스크랩한글", subMenuPath : "/" },
+                                { subMenuId : 6, subMenuName : "내글", subMenuPath : "/" },
+                                { subMenuId : 7, subMenuName : "내댓글", subMenuPath : "/" },
+                                { subMenuId : 8, subMenuName : "질문과 답", subMenuPath : "/" },
+                                { subMenuId : 9, subMenuName : "활용가이드", subMenuPath : "/" },
+                            ]
+                    },
+                    {
+                    topMenu :"파트너가이드",
+                    topMenuId : 4,
+                    open : false,
+                    subMenu : [
+                                { subMenuId : 1, subMenuName : "보호정책", subMenuPath : "/" },
+
+                            ]
+                    },
+                    {
+                    topMenu :"고객센터",
+                    topMenuId : 5,
+                    open : false,
+                    subMenu : [
+                                { subMenuId : 1, subMenuName : "공지사항", subMenuPath : "/" },
+                                { subMenuId : 2, subMenuName : "자주찾는 질문", subMenuPath : "/" },
+                                { subMenuId : 3, subMenuName : "빠른상담문의", subMenuPath : "/" },
+                                { subMenuId : 4, subMenuName : "일반문의", subMenuPath : "/" },
+                                { subMenuId : 5, subMenuName : "내 문의 내역", subMenuPath : "/" },
+                            ]
+                     },                     
+                    ]
+                
+
+            }
+        },
+        methods: {
+            loadDetail(){
+                console.log('loadDetail....... Click');
+            },
+            toggleAccordion(idx){
+                console.log('toggle~~~~~~~~~~~~~~~~~', idx)
+                const panel = this.$refs.panel[idx];
+                console.log("panel = ", panel)
+
+
+            },
+            changeText(){
+                console.log('함수 호출')
+                console.log(this.text)
+                return this.text.split('').reverse().join('')
+            },
+            changeMessage(){
+                console.log('changeMessage 호출')
+                this.message = "변경된 message 입니다."
+            }
+            
+        },
+        // methods 부분에 선언된 함수와 동일한 로직일때
+        // 캐싱 기능이 없는 methods는 호출될 때마낟 console 값이 출력
+        // computed는 캐싱기능이 있기 때문에 methods와 차이점을 확인
+        computed : {
+            computedText() { // 함수형태이지만 데이터 임
+                console.log("Computed 기능을 생성함.")
+                return this.text.split('').reverse().join('')
+            }
+            
+        },
+        watch:{
+            // message 데이터를 참조
+            // message : function
+            // 데이터뿐만 아니라 computed 로 계산된 형태의 데이터도 watch도 감지할 수 있음
+            // 보통 게시판에서 한 컬럼을 선택했을때 고유한 id 값이 바뀜을 감지하고
+            // 이떄 그 id 값에 따른 상세 데이터를 호출 할때 주로 사용
+            message() {
+                //window.alert('message 변수에 담긴 데이터가 변경됨')
+                this.watchMessage = "watch 출력"
+                
+
+            },
+            id(){
+                // 해당 상세데이터를 조회하는 api 호출
+            }
+        }
+
+    });
+
+</script>

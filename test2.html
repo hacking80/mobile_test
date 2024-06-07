@@ -700,16 +700,42 @@
 
                         console.log('scrollHeight : ', scrollHeight);
 
-                        if(this.scrollPostion === undefined ){
+                        if (mouseWheel == 'up') {
+                            if(this.scrollPostion === undefined ){
+                                console.log("wheel-up-1  ")
+                                this.scrollPostion = topPosition;
 
-                            console.log("1")
-                            this.scrollPostion = topPosition;
+                            }else {
+                                console.log("wheel-up-2")
+                                this.scrollPostion = scrollHeight - ( scrollHeight - Math.abs(e.deltaY));
+                                console.log(this.scrollPostion)
+                            }
+                        } else if(mouseWheel == 'down') {
 
-                        }else {
-                            console.log("2")
-                            this.scrollPostion = scrollHeight - ( scrollHeight - Math.abs(e.deltaY));
-                            console.log(this.scrollPostion)
+                            if(this.scrollPostion > scrollHeight){
+                                console.log('wheel-down-1')
+                                this.scrollPostion = scrollHeight + ( scrollHeight - Math.abs(e.deltaY));
+
+                            }else{
+                                console.log(innerHeight, " : ", topPosition  )
+
+                                if(this.scrollPostion === undefined){
+                                    window.scrollTo(0,0)
+                                    return false;
+                                } else{
+                                    console.log('wheel-down-2')
+                                    this.scrollPostion = scrollHeight - ( scrollHeight - Math.abs(e.deltaY)); ;
+                                }
+                                
+                                
+                                
+
+                            }
+
+
                         }
+                        
+
                         
 
                         //window.scrollBy(0, e.pageY)
