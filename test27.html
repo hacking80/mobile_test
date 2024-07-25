@@ -1,21 +1,225 @@
 
+<style>
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+  .wrapper{
+    width:100%;
+  }
+  .container{
+    width:100%;
+    max-width:500px;
+    margin:0 auto;
+    border:1px solid #e1e1e1;
+  }
+  .head{
+    width:100%;
+    height:50px;
+    border-bottom:1px solid #e1e1e1;
+    position:relative;
+  }
+  .logo{
+    text-align:center;
+    font-size:32px;
+    font-style:italic;
+    font-weight:800;
+    padding-top:8px;
+  }
+  .body{
+    height:400px;
+    position:relative;
+    overflow:hidden;
+  }
+  .content{
+    height:100%;
+    font-size:30px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  .slideOpen{
+    position:absolute;
+    top:0;
+    right:0;
+    width:50px;
+    height:50px;
+    cursor:pointer;
+  }
+  .burgur{
+  right: 15px;
+  top: 23px;
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: #000000;
+  }
+  .burgur .top-line{
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  bottom: -5px;
+  content: '';
+  position: absolute;
+  right: 0;
+  -webkit-transition:  -webkit-transform .3s;
+  transition: transform .3s;
+  
+  }
+  .burgur .bot-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  top: -5px;
+  content: '';
+  position: absolute;
+  right: 0;
+  -webkit-transition:  -webkit-transform .3s;
+  transition: transform .3s;
+  }
+  
+  .burgur.on {
+  width: 0;
+  }
+  .burgur.on .bot-line {
+  -webkit-transform: translateY(5px) rotate(135deg);
+  transform: translateY(5px) rotate(135deg);
+  }
+  .burgur.on .top-line{
+  -webkit-transform: translateY(-5px) rotate(-135deg);
+  transform: translateY(-5px) rotate(-135deg);
+  }
+  .slide{
+    width:100%;
+    position:absolute;
+    left:-100%;
+    top:120px;
+    right:0;
+    bottom:0;
+    -webkit-transition: left .3s;
+    -moz-transition: left .3s;
+    -ms-transition: left .3s;
+    -o-transition: left .3s;
+    transition: left .3s;
+    background-color:#cccccc;
+  }
+  .slide-title{
+    width:100%;
+    height:100px;
+    font-size:42px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-bottom:1px solid #e1e1e1;
+  }
+  .slide.on{
+    left:0;
+  }
+  .slide ul li{
+    display:inline-block;
+    width:100%;
+    padding:10px;
+    border-bottom:1px solid #e1e1e1;
+  }
+  .slideOpen{
+    position:sticky;
+    top:0;
+    right:0;
+    width:50px;
+    height:50px;
+    cursor:pointer;
+}
+
+
+  #container02 {
+    width:100%; height:100%; margin-bottom:50px;} /* 상단 1단 */
+  
+    .contents_100 {width:100%; max-width:600px; margin:0 auto; text-align:center;}
+  .contents_100 img {width:100%;}
+  .contents_94 {width:94%; max-width:600px; margin:0 auto; text-align:center;}
+  .contents_94 img {width:100%;}
+  .contents {width:90%; max-width:600px; margin:0 auto; text-align:center; color:#222225;}
+  .contents img {width:100%;}
+  .bg_gray {text-align:center; background-color:#F5F5F5;}
+  .bg_black {text-align:center; background-color:#000;}  
+  .pb96 {padding-bottom:96px;}
+  .bold {font-weight:bold;}
+  .mn01 {background-position: 0px 0px; padding-left:46px;}
+  /* menu */
+  .menu {width:100%; margin:16px auto; border-bottom:solid 1px #E1E0E1; }
+  .menu li {height:50px; line-height:50px; text-align:left;}
+  .menu a {display:block; padding-left:46px;}
+  .noline {border-bottom:0px;}
+  .end {margin:0 0 16px 0;}
+  .invisible{display:none;}
+  
+  </style>
+
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script type="text/javascript" src="https://unpkg.com/axios"></script>
 <script type="text/javascript" src="https://unpkg.com/lodash"></script>
-
+<script type="text/javascript" src="/common/slide.js"></script>
  
     <div id="app">
-      <h1>{{posts.length}} posts</h1>
-      <h1>{{totalResults}}</h1>
-        <li v-for="(posts, index) in paginatedOrders" :key="index">{{posts.title}}</li>
+      <br/>
+      <button @click="slideOpen()">슬라이드 열기</button>
+      <br/>
+
+      <h1> 전체게시물 수 :  {{posts.length}} posts</h1>
+      <h1> 전체게시물 Fn :  {{totalResults}}</h1>
+      <h1> 현재노출된 게시물 수 : {{ pageOffest }} </h1>
+        <li v-for="(posts, index) in paginatedOrders" :key="index">{{posts.title}}
+            <button @click="showAlert">클릭</button>
+            <a href="#" @click="showAlert(posts)">클릭2</a>
+            <!-- <img :src="posts.thumbnailUrl"> -->
+
+        </li>
       </ul>
       <button @click="loadMore" v-if="currentPage * maxPerPage < posts.length">load more</button>
+    
+      
+      <div id="wrap">
+        <div v-text="isUsrid"> userid : </div> <br/>
+        <div v-text="isTitle"> title : </div><br/>
+        <div v-text="isId"> id : </div>
+      </div>
+
+
+
+      <!-- 슬라이드 메뉴 -->
+      <div id="container02" >
+        <div class="slide" :class="{'on' : isVisible}"  id="slide" >
+            <div class="contents pb96">
+                <div v-for="(post, index) in slideDataOpen" :key="index">
+                    <ul class="menu">
+                        <li v-bind:class="`bg_menu bold mn0${index+1}`"  @click="menuOpen(post, index)" v-text="post.topMenu" ></li>
+                    </ul>
+                    <ul class="menu" :class="{'invisible':active!==index}"  ref="panel" >
+                        <li v-for="item in post.subMenu">
+                          <a :href="item.subMenuPath" v-text="item.subMenuName"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </div>
       
     </div>
  
+
+    <script type="module">
+      console.log("meta1")
+      console.log(import.meta)
+      console.log("meta2")
+    </script>
+
   
   <script>
+
+
+
     const testVue = new Vue({
    
     name: "App",
@@ -110,9 +314,20 @@
         ],
         
         currentPage: 1,
-        maxPerPage: 3,
+        maxPerPage: 20,
         showReadMore: true,
-        posts : []
+        posts : [],
+        isUsrid : "",
+        isTitle : "",
+        isId : "",
+
+        slideDataOpen : slide,
+        isVisible : false,
+        active : null,
+        postsUrl : "https://jsonplaceholder.typicode.com/posts",
+        photoUrl : "https://jsonplaceholder.typicode.com/photos",
+
+
       };
     },
     beforeCreate() {
@@ -140,16 +355,64 @@
     },
     methods: {
         loadMore() {
-        this.currentPage += 1;
+            this.isUsrid="";
+            this.isTitle ="";
+            this.isId = "";
+            this.currentPage += 1;
         },
       
         fetchContacts : _.debounce( function () {
-                axios.get('https://jsonplaceholder.typicode.com/posts')
+          /*
+                axios.get(this.photoUrl)
                 .then( (res) => {
                     console.log(res)
                     this.posts = res.data;
                 });
+                */
+
+                fetch('/common/jsonplaceholder_photos.json')
+                  .then((res)=> res.json())
+                  .then((data, index)=>{
+                      console.log(data)
+                      this.posts = data;
+                })
+
         }, 300),
+
+
+
+
+
+
+        
+        showAlert(data){
+          //console.log('test: ', idx)  
+          this.isUsrid = data.userId;
+          this.isTitle = data.title;
+          this.isId = data.id;
+        },
+        menuOpen(post, idx){
+          if (this.active === idx) {
+              this.$refs.panel[idx].classList.toggle('invisible')
+          }else{
+              this.$refs.panel.forEach((panel)=>{
+                  panel.classList.add('invisible');
+              })
+
+              this.active = idx;
+              this.$refs.panel[idx].classList.remove('invisible')
+          }
+        },
+        slideOpen(){
+          this.$refs.panel.forEach((panel)=>{
+              panel.classList.add('invisible');
+          })
+
+          this.isVisible = !this.isVisible;
+        },    
+
+
+
 
         /*        
         fetchContacts() {

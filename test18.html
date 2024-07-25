@@ -1,0 +1,96 @@
+
+
+
+
+<!-- 가로 스크롤 -->
+<div id="app">
+    <div class="test-content">
+        <p class="test-title">Vertical Scroll</p>
+        <div class="vertical-scroll">
+            <!-- 제어할 요소에 ref를 적용해준다. -->
+            <ul ref="verticalScrollWrap">
+                <template v-for="i in 12">
+                <li :style="{ backgroundColor: `hsl(${parseInt(Math.random() * 24, 10) * 15}, 16%, 57%)` }"></li>
+                </template>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<script language="JavaScript">
+function scroll() {
+  if(parseInt(document.all.roller.style.top) > -350) {
+     document.all.roller.style.top = parseInt(document.all.roller.style.top) - 2
+  } else {
+    document.all.roller.style.top = parseInt(document.all.roller.style.top) + 670
+  }
+}
+function rulla() {
+setInterval("scroll()", 50)
+}
+</script>
+</head>
+<body onload=rulla()>
+<span id="yttre" style="position:absolute; top: 0px; left: 0px; height: 300px; width: 100px; overflow: hidden; clip: rect("0,320,320,0"); border-style: solid">
+<span id="roller" style="position: absolute; top: 310px; left: 10px; font-family: tahoma; font-size: 10pt">
+You message goes here!<br><br>
+Message 1<br><br>
+Message 2<br><br>
+<font color="red">Message 3</font><br><br>
+Message 4<br><br>
+Message 5<br><br>
+Message 6<br><br>
+<font color="blue">Message 7</font><br><br>
+Message 8<br><br>
+and so on...<br><br>
+</span>
+</span>
+</body>
+</html>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script>
+    
+    const vuePage = new Vue ({
+    el:"#app",
+    data(){
+        return{
+            isMouseDown : false,
+            statx: 0,
+            scrollLeft : 0,
+        }
+    },
+    mounted(){
+       //  제어할 스크롤 요소
+        const verticalScrollWrap = this.$refs.verticalScrollWrap
+
+        verticalScrollWrap.addEventListener('mousedown', (e) => {
+            this.isMouseDown = true
+            this.startX = e.pageX - verticalScrollWrap.offsetLeft;
+            this.scrollLeft = verticalScrollWrap.scrollLeft;
+        })
+
+        verticalScrollWrap.addEventListener('mouseleave', () => {
+            this.isMouseDown = false
+        })
+
+        verticalScrollWrap.addEventListener('mouseup', () => {
+            this.isMouseDown = false
+        })
+
+        verticalScrollWrap.addEventListener('mousemove', (e) => {
+            if (!this.isMouseDown) return
+
+            e.preventDefault()
+            const x = e.pageX - verticalScrollWrap.offsetLeft
+            const beforeScrollLeft = (x - this.startX) * 1
+            verticalScrollWrap.scrollLeft = this.scrollLeft - beforeScrollLeft
+        })
+    }
+})
+
+  </script>

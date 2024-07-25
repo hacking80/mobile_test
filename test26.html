@@ -1,0 +1,49 @@
+
+
+<style>
+.clicker {
+width:100px;
+height:100px;
+background-color:blue;
+outline:none;
+cursor:pointer;
+}
+
+.hiddendiv{
+display:block;
+height:200px;
+background-color:green;
+}
+
+.clicker:focus + .hiddendiv{
+display:none;
+}    
+</style>
+<script>
+    let obj = {
+        item : [
+            { campaignType : "B"  },
+            { campaignType : "P"  },
+            { campaignType : "H"  },
+            { campaignType : "D"  }
+        ]
+    }
+
+    console.log(obj)
+</script>
+
+
+
+<html>
+<head>
+</head>
+<body>
+
+<div>
+<div class="clicker" tabindex="1">Click me</div>
+<div class="hiddendiv"></div>
+</div>
+
+</body>
+
+</html>

@@ -1,41 +1,320 @@
 
 
+<link href="/css/normalize.css" rel="stylesheet">
+<link href="/css/style_mobile.css" rel="stylesheet">
+<link href="/css/popup.css" rel="stylesheet">
+<link href="/css/slide.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+
+
 <div id="app">
+  <div id="container02">
 
-
+    <child-slot-component></child-slot-component>
+  <!--
     <header>
       <button type="button" @click="doOpen">버튼</button>
     </header>
     <Transition mode="out-in">
       <Slide v-show="isSlide" @close="doClose"/>
     </Transition>
-  
-
 
     <div class="slide-wrap">
         <button type="button" @click="doClose">닫기</button>
     </div>
+  -->
+        <!-- 이벤트 메인 팝업 -->
+         <!--
+        <div class="pop_wrap" v-show="isEventPopup">
+          <div class="pop_new">
+              <button type="button" @click="eventPopupClose()" class="close_w24">
+                  <img src="/images/common/ico_close02.png" alt="닫기" />
+              </button>
+              <img :src="isEventPopupSrc" onclick=location.href="'/user/member/signup'" />
+          </div>
+          <div class="mask02"></div>
+      </div>    
+
+      <button @click="eventPopup"> 열기 </button>
+
+      <select v-model="eventNo" @change="eventPopup">
+        <option value="0">메인팝업선택</option>
+        <option value="1">이벤트1</option>
+        <option value="2">이벤트2</option>
+        <option value="3">이벤트3</option>
+        <option value="4">이벤트4</option>
+        <option value="5">이벤트5</option>
+        <option value="6">이벤트6</option>
+      </select>
+    -->
+
+      <!--
+      <div class="pop_icon">
+        <div class="mn01"></div>
+        <div class="cate"></div>
+        <div class="cate2"></div><br/>
+      </div>
+    -->
+      <!--
+      <div class="pop_icon cate"></div>
+      <div class="pop_icon cate2"></div>
+      <div class="pop_icon cate"></div>
+    -->
+
+
+      <!-- 카테고리 목록 -->
+      <!--
+      <category></category>
+      -->
+
+      <component2></component2>
+      <app-Header></app-Header>
+      <!--<child-component v-bind:propsdata="message"></child-component>-->
+      <child-component v-on:update="showAlert"></child-component>
+
+      <!-- <my-checkbox 
+        v-for="idol in idols" :key="idol.id"
+        :id="idol.id" 
+        :name="idol.name" 
+        :checked="idol.checked" 
+        ></my-checkbox> -->
+
+        <br/><br/>
+        <hr/>
+        <div>
+          <h2>관심있는 K-POP 가수?</h2><hr />
+          <ul>
+            <child-component2 v-for="idol in idols" :key="idol.id" :idol="idol" />
+          </ul>
+        </div>
+
+        <br/><br/>
+        <input-component @name-changed="nameChangedHandler"></input-component>
+        <br>
+        <h3> App Component Data : {{ parentName }}</h3>
+        
+        <br/>
+        <Sender></Sender>
+        <br>
+        <r-component></r-component>
+
+        <div class="select01">
+          <ul> 
+              <li><a></a></li>
+              <li><a href="#" @click="openOptionPopup('black_ra');">카테고리</a></li>
+              <li><a href="#" @click="openOptionPopup('black_rb');">정렬</a></li>
+              <li><a href="#" @click="openOptionPopup('black_rc');">브랜드</a></li>
+              <li><a href="#" @click="openOptionPopup('black_rd');">할인율</a></li>
+          </ul>
+      </div>
+
+     </div>
+
+     <div class="pop_wrap">
+      <!--
+      <category2  
+      
+        v-for="(idol, index) in idols" :key="idol.id"
+        :id = "idol.id"
+        :name = "idol.name"
+        :idol = "idol"
+        :idx = "index"
+        @close="closePopup"
+        ></category2>
+        -->
+
+
+        
+        <category2 
+        
+          modalname = "black_ra"
+          :idols = "idols"
+          @close="closePopup"
+        >
+        </category2>
+
+        <category2
+          
+          modalname = "black_rc"
+          :idols = "this.brandList"
+          @close="closePopup"
+        >
+        </category2>
+
+
+        <div class="mask"></div>
+      </div>
+
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-event-bus@1.0.2/vue-event-bus.min.js"></script>
+
+<script src="./common/CheckBox.js"></script>
+<script src="./common/InputName.js"></script>
+<script src="./common/Receiver.js"></script>
+<script src="./common/Sender.js"></script>
+<script src="./common/CategoryMenu.js"></script>
+<script src="./common/CategoryMenu2.js"></script>
+
+
 <script>
+
+
+class Coupon{
+  constructor(price, expiration){
+    this.price = price;
+    this.expiration = expiration || '2주'
+  }
+
+  getPriceText(){
+    return `$ ${this.price}`;
+  }
+
+  getExpirationMessage(){
+    return ` 이 쿠폰은 ${this.expiration} 후에 만료됩니다.`;
+  }
+}
+const coupon = new Coupon(5);
+coupon.getPriceText();
+coupon.getExpirationMessage();
+
+
+var appHeader = { template : '<h1>Header Component</h1>' }
+var childComponent = {
+  props: ['propsdata'],
+  //template: `<p>{{ propsdata }}</p>`,
+  template: `<button @click=sendEvent>Send Test to Parent </button>`,
+  methods: {
+    sendEvent() {
+      this.$emit('update');
+    },
+   
+
+  },
+}
+
+var childComponent2 = {
+  props: ["idol"],
+  template : `<li><input type="checkbox" :checked="idol.checked" /> {{idol.name}}</li>`
+}
+
+Vue.component('my-checkbox', {
+
+  data() {
+    return {
+    }
+  },
+  props :{
+      id : [Number, String],
+      name : String,
+      /*
+      name: {
+        validator(v){
+              console.log('validate...')
+              return typeof(v) !== "string" ? 
+              false : v.trim().length >= 4 ? true : false
+          }
+      },
+      */
+      
+    checked:{
+      type: Boolean,
+      required: false,
+      default: false
+    },         
+
+  },
+  template: `<li><input type='checkbox' :checked="checked" /> {{id}} - {{name}} </li>`
+
+})
+
+
+//const ChildSlotComponent = {template : `<div></div>`};
 
 const vuePage = new Vue ({
         el : "#app",
+        components: {
+          'app-header' : appHeader,
+          'child-component' : childComponent,
+          'child-component2' : childComponent2,
+          'input-component' :   InputNameComponent,
+          'r-component' : receiverComponent,
+          //'component-header' : component2,
+          component2, Sender,
+          'category' : categoryMenuList,
+          'category2' : categoryMenuList2,
+          //'member-component' : menuComponent
+          ChildSlotComponent : {template:`<div></div>`} ,
+          },
         data() {
             return {
-                isSlide: false
-
+              parentName : "",
+              isSlide: false,  
+                eventNo : '0',
+                isEventPopup: true,
+                isEventPopupSrc : "images/banner/popup_new01.png",
+                idols :[
+                  { id:1, name:"BTS", checked:true},
+                  { id:2, name:"Black Pink", checked:false },
+                  { id:3, name:"EXO", checked:false },
+                  { id:4, name:"ITZY", checked:false },
+                ],
+                message : 'Hello Component!!',
+                brandList : [],
             }
         },
+        created() {
+          this.getBrandList();
+        },
         methods: {
+            nameChangedHandler(e){
+              console.log('nameChangedHandler....')
+              this.parentName = e.name;
+            },
+            showAlert(){
+              alert('event received')
+            },
             doOpen(){
-            this.isSlide = true
+              this.isSlide = true
             },
 
             doClose(){
-            this.isSlide = false
-            }
+              this.isSlide = false
+            },
+            eventPopupClose(){
+              this.isEventPopup = false;
+            },
+            eventPopup(){
+              console.log(this.eventNo)
+              let i = this.eventNo
+              this.isEventPopup = "/images/banner/popup_new0"+i+".png";
+              console.log(this.isEventPopup)
+              //this.isEventPopup = !this.isEventPopup
+              
+            },
+            openOptionPopup(modalname) {
+              document.getElementsByClassName(modalname)[0].style.display = 'block';
+              document.getElementsByClassName('mask')[0].style.display = 'block';
+            },
+            closePopup(modalname) {
+              document.getElementsByClassName(modalname)[0].style.display = 'none';
+              document.getElementsByClassName('mask')[0].style.display = 'none';
+            },
+            getBrandList(){
+              console.log('~~getBrandList~~')
+            
+              fetch('/common/brandList.json')
+                  .then((res)=> res.json())
+                  .then((data, index)=>{
+                      console.log(data)
+                      this.brandList = data.body;
+              })
+            
+           }     
+            
         },        
     });
 
@@ -43,6 +322,28 @@ const vuePage = new Vue ({
 
 
 <style>
+
+.pop_icon {
+	overflow: hidden; position: relative; 
+  width: 50px;  height: 50px;
+  
+  margin: 0 auto;
+	background: url(/images/common/menu_icon.png);
+	background-size: 290px 265px;
+  vertical-align: top;
+}
+
+.pop_icon > a {
+  background-position: -30px -30px;
+}
+
+
+.mn01 {background-position: -200px 0;}
+.cate {background-position: -60px 0;}
+.cate2 {background-position: -200px 0;}
+.cate3 {background-position: -180px 0;}
+
+
 .slide-enter-to,
 .slide-leave-from {
   transform:translateX(0);

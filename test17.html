@@ -93,7 +93,7 @@ transform: translateY(-5px) rotate(-135deg);
   width:100%;
   position:absolute;
   left:-100%;
-  top:0;
+  top:120px;
   right:0;
   bottom:0;
   -webkit-transition: left .3s;
@@ -122,6 +122,27 @@ transform: translateY(-5px) rotate(-135deg);
   border-bottom:1px solid #e1e1e1;
 }
 
+#container02 {
+	width:100%; height:100%; margin-bottom:50px;} /* 상단 1단 */
+
+  .contents_100 {width:100%; max-width:600px; margin:0 auto; text-align:center;}
+.contents_100 img {width:100%;}
+.contents_94 {width:94%; max-width:600px; margin:0 auto; text-align:center;}
+.contents_94 img {width:100%;}
+.contents {width:90%; max-width:600px; margin:0 auto; text-align:center; color:#222225;}
+.contents img {width:100%;}
+.bg_gray {text-align:center; background-color:#F5F5F5;}
+.bg_black {text-align:center; background-color:#000;}  
+.pb96 {padding-bottom:96px;}
+.bold {font-weight:bold;}
+.mn01 {background-position: 0px 0px; padding-left:46px;}
+/* menu */
+.menu {width:100%; margin:16px auto; border-bottom:solid 1px #E1E0E1; }
+.menu li {height:50px; line-height:50px; text-align:left;}
+.menu a {display:block; padding-left:46px;}
+.noline {border-bottom:0px;}
+.end {margin:0 0 16px 0;}
+
 </style>
 
 <div id="app">
@@ -135,7 +156,7 @@ transform: translateY(-5px) rotate(-135deg);
              </span>
              </div>
             
-             <div class="logo">MUZIMUZI - 브랜치로 작업한거 이제 병합을 합니다. ~ 다시 메인으로</div>
+             <div class="logo" @click="slideClose">MUZIMUZI</div>
            </div>
     
            <div class="body">
@@ -162,6 +183,18 @@ transform: translateY(-5px) rotate(-135deg);
     </div>
 </div>
 
+<div id="app1">
+  <button @click="sOpen()">열기</button>
+  <slidetest></slidetest>
+</div>
+
+
+<div id="components-demo">
+  <button-counter></button-counter>
+</div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
@@ -181,8 +214,273 @@ const app = new Vue({
     methods : {
         slideOpen(){
             console.log('slideOpen')
-            this.isVisible = !this.isVisible;
+            //this.isVisible = !this.isVisible;
+            slideComponent.slideOpen2()
+        },
+        slideClose(){
+          console.log('slide_Close')
+          slideComponent.slideClose2()
         }
+
+        
     }
 })
+
+const slideComponent = new Vue({ 
+  el: '#components-demo' ,
+  //component : 'button-counter',
+  data() {
+    return {
+      count : 0,
+      active : null,
+      isVisible2 : false,
+      posts : [
+                {
+                    topMenu :"상품",
+                    topMenuId : 1,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "상품버전", subMenuPath : "/user/campaign/list" },
+                        { subMenuId : 2, subMenuName : "찜한상품", subMenuPath : "/user/campaign/like/list" },
+                        { subMenuId : 3, subMenuName : "코드버전", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "인기카테고리", subMenuPath : "/" },
+                        { subMenuId : 5, subMenuName : "전략캠페인", subMenuPath : "/" },
+                    ]
+                },
+                {
+                    topMenu :"리포트",
+                    topMenuId : 2,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "상품별", subMenuPath : "/" },
+                        { subMenuId : 2, subMenuName : "주문별", subMenuPath : "/" },
+                        { subMenuId : 3, subMenuName : "내상품순위", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "정산", subMenuPath : "/" },
+                    ]
+                },
+                {
+                    topMenu :"커뮤니티",
+                    topMenuId : 3,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "캠페인전략", subMenuPath : "/" },
+                        { subMenuId : 2, subMenuName : "성공전략", subMenuPath : "/user/success/success-story" },
+                        { subMenuId : 3, subMenuName : "자유게시판", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "묻고닫하기", subMenuPath : "/" },
+                        { subMenuId : 5, subMenuName : "스크랩한글", subMenuPath : "/" },
+                        { subMenuId : 6, subMenuName : "내글", subMenuPath : "/" },
+                        { subMenuId : 7, subMenuName : "내댓글", subMenuPath : "/" },
+                        { subMenuId : 8, subMenuName : "질문과 답", subMenuPath : "/" },
+                        { subMenuId : 9, subMenuName : "활용가이드", subMenuPath : "/" },
+                    ]
+                },
+                {
+                    topMenu :"파트너가이드",
+                    topMenuId : 4,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "보호정책", subMenuPath : "/" },
+
+                    ]
+                },
+                {
+                    topMenu :"고객센터",
+                    topMenuId : 5,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "공지사항", subMenuPath : "/" },
+                        { subMenuId : 2, subMenuName : "자주찾는 질문", subMenuPath : "/" },
+                        { subMenuId : 3, subMenuName : "빠른상담문의", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "일반문의", subMenuPath : "/" },
+                        { subMenuId : 5, subMenuName : "내 문의 내역", subMenuPath : "/" },
+                    ]
+                },
+            ],      
+    }
+  },
+  methods: {
+    slideOpen2(){
+      console.log('ttt')
+      this.isVisible2 = !this.isVisible2;
+      //app.slideOpen()
+    },
+    slideClose2(){
+      this.visible = !this.visible;
+      this.isVisible2 = !this.isVisible2;
+    }
+    
+  },
+  template: `
+      <div id="container02" >
+          <div  class="slide" :class="{'on' : isVisible2}"  id="slide" >
+              <div class="contents pb96">
+                  <div v-for="(post, index) in posts" :key="index">
+                    <ul class="menu">
+                        <!-- <li class='bold mn01' @click="post.open = !post.open" v-text="post.topMenu"></li>-->
+                        <li class='bold mn01' @click="menuOpen(post, index)" v-text="post.topMenu" ></li>
+                    </ul>
+                    <ul class="menu" :class="{'invisible':active!==index}"  ref="panel" >
+                        <li v-for="item in post.subMenu"><a :href="item.subMenuPath" v-text="item.subMenuName"></a></li>
+                    </ul>
+                </div>
+              </div>
+          </div>
+      </div>`
+})
+
+</script>
+
+
+
+<div id="footer">
+  <button @click="this.slideComponent.slideOpen2()">슬라이드 열기</button> <br/>
+  <button @click="footSlideClose()">슬라이드 닫기</button> <br/>
+</div>
+<br/><br/><br/><br/>
+
+
+
+
+<script>
+  const footer = new Vue({
+    el : "#footer",
+    data(){
+      return {
+        isVisible2 : false,
+
+      }
+    },
+    methods: {
+      footSlideOpen(){
+        console.log('foot_slide_open')
+        slideComponent.slideOpen2()
+      },
+      footSlideClose(){
+        console.log('foot_slide_close')
+        slideComponent.slideClose2()
+      }
+    }
+  })
+
+
+  //Vue.component('slideTest',{
+  const slideTest = {
+    template:`
+    <button @click='sOPen()'>열기</button>
+      <div id="container02" >
+          <div  class="slide" :class="{'on' : isVisible2}"  id="slide" >
+              <div class="contents pb96">
+                  <div v-for="(post, index) in posts" :key="index">
+                    <ul class="menu">
+                        <!-- <li class='bold mn01' @click="post.open = !post.open" v-text="post.topMenu"></li>-->
+                        <li class='bold mn01' @click="menuOpen(post, index)" v-text="post.topMenu" ></li>
+                    </ul>
+                    <ul class="menu" :class="{'invisible':active!==index}"  ref="panel" >
+                        <li v-for="item in post.subMenu"><a :href="item.subMenuPath" v-text="item.subMenuName"></a></li>
+                    </ul>
+                </div>
+              </div>
+          </div>
+      </div>
+      `,
+      data(){
+        return {
+          isVisible2 : false,
+          active : null,
+          name : 'slideTest1111',
+          posts : [
+                {
+                    topMenu :"상품",
+                    topMenuId : 1,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "상품버전", subMenuPath : "/user/campaign/list" },
+                        { subMenuId : 2, subMenuName : "찜한상품", subMenuPath : "/user/campaign/like/list" },
+                        { subMenuId : 3, subMenuName : "코드버전", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "인기카테고리", subMenuPath : "/" },
+                        { subMenuId : 5, subMenuName : "전략캠페인", subMenuPath : "/" },
+                    ]
+                },
+                {
+                    topMenu :"리포트",
+                    topMenuId : 2,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "상품별", subMenuPath : "/" },
+                        { subMenuId : 2, subMenuName : "주문별", subMenuPath : "/" },
+                        { subMenuId : 3, subMenuName : "내상품순위", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "정산", subMenuPath : "/" },
+                    ]
+                },
+                {
+                    topMenu :"커뮤니티",
+                    topMenuId : 3,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "캠페인전략", subMenuPath : "/" },
+                        { subMenuId : 2, subMenuName : "성공전략", subMenuPath : "/user/success/success-story" },
+                        { subMenuId : 3, subMenuName : "자유게시판", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "묻고닫하기", subMenuPath : "/" },
+                        { subMenuId : 5, subMenuName : "스크랩한글", subMenuPath : "/" },
+                        { subMenuId : 6, subMenuName : "내글", subMenuPath : "/" },
+                        { subMenuId : 7, subMenuName : "내댓글", subMenuPath : "/" },
+                        { subMenuId : 8, subMenuName : "질문과 답", subMenuPath : "/" },
+                        { subMenuId : 9, subMenuName : "활용가이드", subMenuPath : "/" },
+                    ]
+                },
+                {
+                    topMenu :"파트너가이드",
+                    topMenuId : 4,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "보호정책", subMenuPath : "/" },
+
+                    ]
+                },
+                {
+                    topMenu :"고객센터",
+                    topMenuId : 5,
+                    open : false,
+                    subMenu : [
+                        { subMenuId : 1, subMenuName : "공지사항", subMenuPath : "/" },
+                        { subMenuId : 2, subMenuName : "자주찾는 질문", subMenuPath : "/" },
+                        { subMenuId : 3, subMenuName : "빠른상담문의", subMenuPath : "/" },
+                        { subMenuId : 4, subMenuName : "일반문의", subMenuPath : "/" },
+                        { subMenuId : 5, subMenuName : "내 문의 내역", subMenuPath : "/" },
+                    ]
+                },
+            ],  
+        }
+      },
+      methods: {
+        sOpen(){
+        console.log('test_sOPen')
+        //this.slideActive = !this.slideActive;
+        this.isVisible2 = !this.isVisible2;
+        //app.slideOpen()
+        },
+        sClose(){
+          this.slideActive = !this.slideActive;
+        }  
+      } 
+  }
+
+
+  const app1 = new Vue({
+    el:'#app1',
+    components : {
+      'slidetest' : slideTest
+    },
+    methods:{
+      sOpen(){
+          slideTest.sOpen
+          console.log('app1_sOpen')
+          //this.slideActive = !this.slideActive;
+          //app.slideOpen()
+        },
+        sClose(){
+          this.slideActive = !this.slideActive;
+        }             
+    }    
+  })
 </script>

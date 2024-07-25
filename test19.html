@@ -1,0 +1,51 @@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<script>
+    $('.tabmenu ul li a').on('click', function(){
+  $('.tabmenu ul li').removeClass('on');
+  $(this).parent().addClass('on');
+  var left = $('.tabmenu ul li.on').offset().left;
+  var curLeft = $('.tabmenu').scrollLeft();
+  $('.tabmenu').animate({scrollLeft : curLeft+left}, 400);
+});
+</script>
+
+<style>
+    a{
+  text-decoration: none;
+  color: #444;
+}
+.tabmenu{
+  width: 500px;
+  border: 1px solid #ccc;
+  padding: 20px 0;
+  overflow: auto;
+}
+.tabmenu ul{
+  white-space:nowrap;
+}
+.tabmenu ul li{
+  display: inline-block;
+  padding: 0 10px;
+}
+.tabmenu ul li.on a{
+  text-decoration: underline;
+}
+</style>
+
+
+
+<div class="tabmenu">
+    <ul>
+      <li class="on"><a href="javascript:;">메뉴1</a></li>
+      <li><a href="javascript:;">메뉴2</a></li>
+      <li><a href="javascript:;">메뉴3</a></li>
+      <li><a href="javascript:;">메뉴4</a></li>
+      <li><a href="javascript:;">메뉴5</a></li>
+      <li><a href="javascript:;">메뉴6</a></li>
+      <li><a href="javascript:;">메뉴7</a></li>
+      <li><a href="javascript:;">메뉴8</a></li>
+      <li><a href="javascript:;">메뉴9</a></li>
+    </ul>
+  </div>
